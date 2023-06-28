@@ -1,11 +1,15 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React from "react";
 
-const Post = () => {
-    const {id} = useParams()
+const Post = ({ post }) => {
   return (
-    <h1>Post {id}</h1>
-  )
-}
+    <article className="post">
+      <h2>{post.title}</h2>
+      <p className="postDate">{post.datetime}</p>
+      <p className="postBody">
+        {post.body.length <= 25 ? post.Body : `${(post.body).slice(0, 25)}...`}
+      </p>
+    </article>
+  );
+};
 
-export default Post
+export default Post;
