@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import api from "./api/posts";
 import EditPost from "./EditPost";
+import useWindowsSize from "./hooks/useWindowsSize";
+import useAxiosFetch from "./hooks/useAxiosFetch";
 
 function App() {
   const [posts, setPosts] = useState([]);
@@ -21,24 +23,14 @@ function App() {
   const [editTitle, setEditTitle] = useState("");
   const [editBody, setEditBody] = useState("");
   const navigate = useNavigate();
+  const { width } = useWindowsSize();
+  const { data, fetchError, isLoding } = useAxiosFetch(
+    "http://localhost:3500/posts"
+  );
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await api.get("/posts");
-        setPosts(response.data);
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error:${err.message}`);
-        }
-      }
-    };
-    fetchPosts();
-  }, []);
+    setPosts(data);
+  }, [data]);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -95,11 +87,20 @@ function App() {
 
   return (
     <div className="App">
-      <Header title={"Social Media"} />
+      <Header title={"Social Media"} width={width} />
       <Nav setSearch={setSearch} search={search} />
 
       <Routes>
-        <Route path="/" element={<Home posts={serchResults} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              posts={serchResults}
+              isLoding={isLoding}
+              fetchError={fetchError}
+            />
+          }
+        />
         <Route path="post">
           <Route
             index
@@ -128,7 +129,6 @@ function App() {
               editTitle={editTitle}
               setEditBody={setEditBody}
               setEditTitle={setEditTitle}
-
             />
           }
         />
