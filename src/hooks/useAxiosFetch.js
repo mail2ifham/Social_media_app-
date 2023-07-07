@@ -7,27 +7,22 @@ const useAxiosFetch = (dataUrl) => {
   const [isLoding, setIsLoding] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    
+
     const fetchData = async (url) => {
-        setIsLoding(true);
-        try {
-            const response = await axios.get(url);
-                setData(response.data);
-                setFetchError(null);
-        } catch (err) {
-                setFetchError(err.message);
-                setData([]);
-            } finally {
-        setIsLoding(false);
+      setIsLoding(true);
+      try {
+        const response = await axios.get(url);
+        setData(response.data);
+        setFetchError(null);
+      } catch (err) {
+        setFetchError(err.message);
+        setData([]);
+      } finally {
+        setTimeout(() => setIsLoding(false), 2000);
       }
     };
     fetchData(dataUrl);
 
-    const cleanUp = () => {
-      isMounted = false;
-    };
-    return cleanUp();
   }, [dataUrl]);
   return { data, fetchError, isLoding };
 };

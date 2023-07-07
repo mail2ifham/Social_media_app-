@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import DataContext from "./Context/DataContext";
 
-const Nav = ({search, setSearch, serchResults}) => {
+const Nav = () => {
+  const {search, setSearch}  =  useContext(DataContext)
   return (
     <>
     <nav className="Nav">
